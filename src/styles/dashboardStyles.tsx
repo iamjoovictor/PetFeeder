@@ -21,6 +21,22 @@ const styles = StyleSheet.create({
         fontSize: 50,
         fontWeight: 'bold',
         color: 'white'
+    },
+    buttonDumpFeed: {
+        marginTop: 40,
+        borderWidth: 1,
+        borderRadius: 10,
+        borderStyle: 'solid',
+        borderColor: 'grey',
+        width: '80%',
+        paddingVertical: 10,
+        backgroundColor: 'green',
+        display: "flex",
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    textButtonDumpFeed: {
+        color: 'white'
     }
 });
 

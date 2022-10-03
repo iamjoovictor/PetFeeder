@@ -1,4 +1,4 @@
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import styles from '../styles/dashboardStyles';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useCallback, useEffect, useState } from 'react';
@@ -44,8 +44,8 @@ export function DashboardComponent() {
     }
   }, [lastMessage]);
 
-  function teste(){
-    sendMessage('To enviando uma mensagem diferenteee'), [];
+  function dumpFeed(){
+    sendMessage('180'), [];
   }
 
   const connectionStatus = {
@@ -67,6 +67,14 @@ export function DashboardComponent() {
           {levelRacao}
         </Text>
       </TouchableHighlight>
+      <TouchableOpacity
+        style={styles.buttonDumpFeed}
+        onPress={() => {
+          dumpFeed()
+        }}
+        >
+        <Text style={styles.textButtonDumpFeed}>Despejar Alimento</Text>
+      </TouchableOpacity>
     </View>
   );
 }

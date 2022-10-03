@@ -74,7 +74,8 @@ export function AlarmeComponent() {
         let stringMinute = Number(date.substring(3,5));
         let nowDate = new Date();
         nowDate.setHours(stringHour)
-        return nowDate.setMinutes(stringMinute)
+        nowDate.setMinutes(stringMinute)
+        return nowDate.setSeconds(0)
     }
 
     const getAlarmesFunction = async () => {
