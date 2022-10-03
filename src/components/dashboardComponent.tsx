@@ -31,8 +31,8 @@ export function DashboardComponent() {
     if(lastMessage?.data != 'Hello world!' && lastMessage?.data != null && lastMessage?.data[0] == '{'){
       let messageReceive = String(lastMessage.data).replace("'\'",'');
       if(messageReceive[0] == '{'){
-        let messageReceiveJson = JSON.parse(messageReceive); 
-        if(messageReceiveJson.nivelRacao){
+        let messageReceiveJson = JSON.parse(messageReceive);
+        if(messageReceiveJson.nivelRacao >= 0){
           setLevelRacao(messageReceiveJson.nivelRacao.toString())
           const saveAsyncStorage = async () => {
             await AsyncStorage.setItem('levelRacao', messageReceiveJson.nivelRacao.toString())

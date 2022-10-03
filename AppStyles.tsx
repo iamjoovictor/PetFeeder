@@ -15,13 +15,23 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingHorizontal: 100,
     },
-    button: {
+    buttonDashboard: {
         borderWidth: 1,
         borderRadius: 10,
         borderStyle: 'solid',
         borderColor: 'grey',
         paddingVertical: 5,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        backgroundColor: '#D2E1FF'
+    },
+    buttonAlarme: {
+        borderWidth: 1,
+        borderRadius: 10,
+        borderStyle: 'solid',
+        borderColor: 'grey',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        backgroundColor: 'white'
     }
 });
 

@@ -5,7 +5,7 @@ const styles = StyleSheet.create({
     contentContainer: {
         elevation: 1,
         zIndex: 1,
-        height: '89%',
+        height: Dimensions.get('window').height - 250,
         justifyContent: 'center',
         alignItems: 'center',
     },
