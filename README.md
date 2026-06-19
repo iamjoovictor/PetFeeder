@@ -2,6 +2,20 @@
 
 Aplicativo mobile para **alimentação remota de pets**, desenvolvido com React Native + Expo. Controle o dispensador de ração do seu animal de estimação de qualquer lugar, em tempo real.
 
+## Screenshots
+
+<div align="center">
+  <img src="assets/screenshots/alarmes.jpg" width="220" alt="Dashboard" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="assets/screenshots/dashboard.jpg" width="220" alt="Alarmes" />
+  &nbsp;&nbsp;&nbsp;
+  <img src="assets/screenshots/add-alarmes.jpg" width="220" alt="Adicionar Alarme" />
+</div>
+
+<div align="center">
+  <sub>Dashboard &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Alarmes &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Adicionar Alarme</sub>
+</div>
+
 ## Funcionalidades
 
 ### Dashboard
