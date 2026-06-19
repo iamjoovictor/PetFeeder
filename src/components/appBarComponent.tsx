@@ -1,19 +1,16 @@
-import React, { useState } from "react";
-import { AppBar, HStack, IconButton, ListItem } from "@react-native-material/core";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import React from "react";
 import styles from "../styles/appBarStyles";
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export function AppBarComponent() {
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.viewAppBar}>
-      <AppBar
-        color="blue"
-        style={styles.appbar}
-        title="Pet Feeder"
-        centerTitle={true}
-      />
+    <View style={[styles.viewAppBar, { paddingTop: insets.top }]}>
+      <View style={styles.appbar}>
+        <Text style={styles.title}>Pet Feeder</Text>
+      </View>
     </View>
   );
 }

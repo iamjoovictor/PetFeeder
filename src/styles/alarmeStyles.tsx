@@ -1,65 +1,113 @@
 import { StyleSheet } from "react-native";
-import { Dimensions } from 'react-native';
+import { colors } from './theme';
 
 const styles = StyleSheet.create({
     contentContainer: {
-        elevation: 1,
-        zIndex: 1,
-        height: Dimensions.get('window').height - 250,
-        justifyContent: 'flex-start',
-        alignItems: 'center',
+        flex: 1,
+        padding: 16,
     },
-    input: {
-        width: '80%',
-        display: "flex",
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 10
+    listContent: {
+        gap: 10,
+        paddingBottom: 16,
     },
-    inputText: {
-        fontSize: 20
+    emptyText: {
+        textAlign: 'center',
+        color: colors.textMuted,
+        fontSize: 14,
+        marginTop: 32,
+        marginBottom: 16,
     },
     alarmeData: {
-        borderWidth: 1,
-        borderRadius: 10,
-        borderStyle: 'solid',
-        borderColor: 'grey',
-        width: '80%',
-        paddingVertical: 10,
-        backgroundColor: 'white',
-        display: "flex",
+        backgroundColor: colors.surface,
+        borderRadius: 14,
+        paddingVertical: 18,
+        paddingHorizontal: 20,
+        flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 10
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.06,
+        shadowRadius: 4,
+        elevation: 2,
+    },
+    alarmTimeText: {
+        fontSize: 32,
+        fontWeight: '700',
+        color: colors.textPrimary,
+        flex: 1,
+        letterSpacing: 1,
+    },
+    alarmIcon: {
+        fontSize: 18,
     },
     buttonAdd: {
-        borderWidth: 1,
-        borderRadius: 10,
-        borderStyle: 'solid',
-        borderColor: 'grey',
-        width: '80%',
-        paddingVertical: 10,
-        backgroundColor: 'green',
-        display: "flex",
+        marginTop: 8,
+        borderRadius: 14,
+        paddingVertical: 15,
+        backgroundColor: colors.primary,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        shadowColor: colors.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 8,
+        elevation: 4,
+    },
+    textAddButton: {
+        color: 'white',
+        fontWeight: '700',
+        fontSize: 15,
+    },
+    formCard: {
+        backgroundColor: colors.surface,
+        borderRadius: 20,
+        padding: 24,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+        elevation: 3,
+        marginBottom: 16,
+    },
+    formLabel: {
+        fontSize: 12,
+        fontWeight: '600',
+        color: colors.textSecondary,
+        textTransform: 'uppercase',
+        letterSpacing: 1,
+        marginBottom: 10,
+    },
+    input: {
+        borderWidth: 1.5,
+        borderColor: colors.border,
+        borderRadius: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 12,
+        marginBottom: 20,
+        backgroundColor: colors.background,
+        alignItems: 'center',
+    },
+    inputText: {
+        fontSize: 36,
+        fontWeight: '700',
+        color: colors.textPrimary,
+        textAlign: 'center',
+        letterSpacing: 6,
+        width: '100%',
     },
     buttonCancel: {
         marginTop: 10,
-        borderWidth: 1,
-        borderRadius: 10,
-        borderStyle: 'solid',
-        borderColor: 'grey',
-        width: '80%',
-        paddingVertical: 10,
-        backgroundColor: 'red',
-        display: "flex",
+        borderRadius: 14,
+        paddingVertical: 15,
+        backgroundColor: colors.border,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
-    textAddButton: {
-        color: 'white'
-    }
+    textCancelButton: {
+        color: colors.textSecondary,
+        fontWeight: '600',
+        fontSize: 15,
+    },
 });
 
 export default styles;

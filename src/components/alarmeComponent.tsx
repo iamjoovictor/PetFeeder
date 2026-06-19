@@ -1,34 +1,29 @@
-import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import styles from '../styles/alarmeStyles';
-import useWebSocket, { ReadyState } from 'react-use-websocket';
 import { useEffect, useState } from 'react';
-import { ListItem, TextInput } from '@react-native-material/core';
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import { doc, getDoc, getFirestore, updateDoc } from "firebase/firestore";
 import MaskInput from 'react-native-mask-input';
 
+const firebaseConfig = {
+    apiKey: "AIzaSyD4Dj5f92uI6l7YMWuN2OdcQeAcT5tSnbM",
+    authDomain: "initialprojectesp32.firebaseapp.com",
+    databaseURL: "https://initialprojectesp32-default-rtdb.firebaseio.com",
+    projectId: "initialprojectesp32",
+    storageBucket: "initialprojectesp32.appspot.com",
+    messagingSenderId: "1047624085178",
+    appId: "1:1047624085178:web:6774035dcd05611245dc83"
+};
+
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+const db = getFirestore(app);
+
 export function AlarmeComponent() {
 
-    const [socketUrl, setSocketUrl] = useState('wss://demo.piesocket.com/v3/channel_1?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self');
-    const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
-    const [levelRacao, setLevelRacao] = useState('Sem dados');
-    const [alarmesSaves, setAlarmesSave] = useState([]);
+    const [alarmesSaves, setAlarmesSave] = useState<Date[]>([]);
     const [timeAlarme, setTimeAlarme] = useState('');
 
     const [operation, setOperation] = useState('normal')
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyD4Dj5f92uI6l7YMWuN2OdcQeAcT5tSnbM",
-        authDomain: "initialprojectesp32.firebaseapp.com",
-        databaseURL: "https://initialprojectesp32-default-rtdb.firebaseio.com",
-        projectId: "initialprojectesp32",
-        storageBucket: "initialprojectesp32.appspot.com",
-        messagingSenderId: "1047624085178",
-        appId: "1:1047624085178:web:6774035dcd05611245dc83"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
 
     async function getAlarmes(db) {
         const docRef = doc(db, "animal-feeder", "alarmes");
@@ -69,13 +64,19 @@ export function AlarmeComponent() {
         }
     }
 
-    function formatDateNow(date:string){
-        let stringHour = Number(date.substring(0,2));
-        let stringMinute = Number(date.substring(3,5));
-        let nowDate = new Date();
-        nowDate.setHours(stringHour)
-        nowDate.setMinutes(stringMinute)
-        return nowDate.setSeconds(0)
+    function formatDateNow(date: string) {
+        const stringHour = Number(date.substring(0, 2));
+        const stringMinute = Number(date.substring(3, 5));
+        const nowDate = new Date();
+        nowDate.setHours(stringHour);
+        nowDate.setMinutes(stringMinute);
+        return nowDate.setSeconds(0);
+    }
+
+    function formatTime(date: Date): string {
+        const h = date.getHours().toString().padStart(2, '0');
+        const m = date.getMinutes().toString().padStart(2, '0');
+        return `${h}:${m}`;
     }
 
     const getAlarmesFunction = async () => {
@@ -95,77 +96,74 @@ export function AlarmeComponent() {
         setOperation(operation)
     }
 
-    function clearField(){
+    function clearField() {
         setTimeAlarme('');
     }
 
-    const connectionStatus = {
-        [ReadyState.CONNECTING]: 'Connecting',
-        [ReadyState.OPEN]: 'Open',
-        [ReadyState.CLOSING]: 'Closing',
-        [ReadyState.CLOSED]: 'Closed',
-        [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-    }[readyState];
-
 
     return (
-        <View>
-            {operation == 'normal' &&
-                <View style={styles.contentContainer}>
-                    {alarmesSaves.map((item, index) => {
-                        return (
-                            <TouchableOpacity
-                                style={styles.alarmeData}
-                                key={index}
-                            >
-                                <Text>{item.toString()}</Text>
-                            </TouchableOpacity>
-                        )
-                    })}
+        <View style={{ flex: 1 }}>
+            {operation === 'normal' && (
+                <ScrollView
+                    style={styles.contentContainer}
+                    contentContainerStyle={styles.listContent}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {alarmesSaves.length === 0 && (
+                        <Text style={styles.emptyText}>Nenhum alarme cadastrado</Text>
+                    )}
+                    {alarmesSaves.map((item, index) => (
+                        <TouchableOpacity style={styles.alarmeData} key={index}>
+                            <Text style={styles.alarmTimeText}>{formatTime(item)}</Text>
+                            <Text style={styles.alarmIcon}>🔔</Text>
+                        </TouchableOpacity>
+                    ))}
                     <TouchableOpacity
                         style={styles.buttonAdd}
-                        onPress={() => {
-                            changeOperation('add')
-                        }}
+                        onPress={() => changeOperation('add')}
                     >
-                        <Text style={styles.textAddButton}>+ Adicionar</Text>
+                        <Text style={styles.textAddButton}>+ Adicionar Alarme</Text>
                     </TouchableOpacity>
-                </View>
-            }
-            {operation == 'add' &&
-                <View style={styles.contentContainer}>
-                    <View style={styles.input}>
-                        <MaskInput
-                            style={styles.inputText}
-                            value={timeAlarme}
-                            onChangeText={(masked, unmasked) => {
-                                setTimeAlarme(masked);
+                </ScrollView>
+            )}
+            {operation === 'add' && (
+                <ScrollView
+                    style={styles.contentContainer}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <View style={styles.formCard}>
+                        <Text style={styles.formLabel}>Horário do alarme</Text>
+                        <View style={styles.input}>
+                            <MaskInput
+                                style={styles.inputText}
+                                value={timeAlarme}
+                                onChangeText={(masked) => setTimeAlarme(masked)}
+                                mask={[/\d/, /\d/, ':', /\d/, /\d/]}
+                                placeholder="00:00"
+                                keyboardType="numeric"
+                            />
+                        </View>
+                        <TouchableOpacity
+                            style={styles.buttonAdd}
+                            onPress={() => {
+                                if (timeAlarme) {
+                                    updateAlarmes(formatDateNow(timeAlarme));
+                                    clearField();
+                                    changeOperation('normal');
+                                }
                             }}
-                            mask={[/\d/, /\d/, ':', /\d/, /\d/]}
-                        />
+                        >
+                            <Text style={styles.textAddButton}>Salvar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.buttonCancel}
+                            onPress={() => changeOperation('normal')}
+                        >
+                            <Text style={styles.textCancelButton}>Cancelar</Text>
+                        </TouchableOpacity>
                     </View>
-                    <TouchableOpacity
-                        style={styles.buttonAdd}
-                        onPress={ () => {
-                            if(timeAlarme){
-                                updateAlarmes(formatDateNow(timeAlarme)),
-                                clearField(),
-                                changeOperation('normal')
-                            }
-                        }}
-                    >
-                        <Text style={styles.textAddButton}> Salvar </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.buttonCancel}
-                        onPress={() => {
-                            changeOperation('normal')
-                        }}
-                    >
-                        <Text style={styles.textAddButton}> Cancelar </Text>
-                    </TouchableOpacity>
-                </View>
-            }
+                </ScrollView>
+            )}
         </View>
     );
 }

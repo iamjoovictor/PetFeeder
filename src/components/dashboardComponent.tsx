@@ -1,78 +1,56 @@
-import { Image, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View } from 'react-native';
 import styles from '../styles/dashboardStyles';
 import useWebSocket, { ReadyState } from 'react-use-websocket';
-import { useCallback, useEffect, useState } from 'react';
-import { Dimensions, TouchableHighlight } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect, useState } from 'react';
+import * as storage from '../utils/storage';
 
 export function DashboardComponent() {
-
-  const [socketUrl, setSocketUrl] = useState('wss://demo.piesocket.com/v3/channel_1?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self');
+  const [socketUrl] = useState('wss://demo.piesocket.com/v3/channel_1?api_key=VCXCEuvhGcBDP7XhiJJUDvR1e1D3eiVjgZ9VRiaV&notify_self');
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl);
-  const [levelRacao, setLevelRacao] = useState('Sem dados');
+  const [levelRacao, setLevelRacao] = useState('--');
 
   useEffect(() => {
-    const receiveAsyncStorage = async () => {
-      try{
-        let value = await AsyncStorage.getItem('levelRacao')
-        console.log("Valor no storage",value)
-        if(value){
-          setLevelRacao(value);
-        }
-      }
-      catch{
-        console.log("Deu errado");
-      }
-    }
-    receiveAsyncStorage().catch(console.error)
-  }, [])
+    (async () => {
+      try {
+        const value = await storage.getItem('levelRacao');
+        if (value) setLevelRacao(value);
+      } catch {}
+    })();
+  }, []);
 
   useEffect(() => {
-    if(lastMessage?.data != 'Hello world!' && lastMessage?.data != null && lastMessage?.data[0] == '{'){
-      let messageReceive = String(lastMessage.data).replace("'\'",'');
-      if(messageReceive[0] == '{'){
-        let messageReceiveJson = JSON.parse(messageReceive);
-        if(messageReceiveJson.nivelRacao >= 0){
-          setLevelRacao(messageReceiveJson.nivelRacao.toString())
-          const saveAsyncStorage = async () => {
-            await AsyncStorage.setItem('levelRacao', messageReceiveJson.nivelRacao.toString())
-          }
-          saveAsyncStorage().catch(console.error)
+    if (lastMessage?.data && lastMessage.data !== 'Hello world!' && lastMessage.data[0] === '{') {
+      try {
+        const msg = JSON.parse(String(lastMessage.data));
+        if (msg.nivelRacao >= 0) {
+          const val = msg.nivelRacao.toString();
+          setLevelRacao(val);
+          storage.setItem('levelRacao', val).catch(console.error);
         }
-      }
-      console.log(lastMessage); 
+      } catch {}
     }
   }, [lastMessage]);
 
-  function dumpFeed(){
-    sendMessage('180'), [];
-  }
-
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: 'Connecting',
-    [ReadyState.OPEN]: 'Open',
-    [ReadyState.CLOSING]: 'Closing',
-    [ReadyState.CLOSED]: 'Closed',
-    [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-  }[readyState];
-
+  const isConnected = readyState === ReadyState.OPEN;
 
   return (
     <View style={styles.contentContainer}>
-      <TouchableHighlight
-        style = {styles.button}
-        underlayColor = '#ccc'
-      >
-        <Text style={styles.textButton}>
-          {levelRacao}
+      <View style={styles.card}>
+        <Text style={styles.levelLabel}>Nível de Ração</Text>
+        <View style={styles.levelCircle}>
+          <Text style={styles.levelValue}>{levelRacao}</Text>
+          <Text style={styles.levelUnit}>unidades</Text>
+        </View>
+      </View>
+      <View style={[styles.statusBadge, !isConnected && styles.statusBadgeOff]}>
+        <Text style={[styles.statusText, !isConnected && styles.statusTextOff]}>
+          {isConnected ? '● Conectado' : '○ Desconectado'}
         </Text>
-      </TouchableHighlight>
+      </View>
       <TouchableOpacity
         style={styles.buttonDumpFeed}
-        onPress={() => {
-          dumpFeed()
-        }}
-        >
+        onPress={() => sendMessage('180')}
+      >
         <Text style={styles.textButtonDumpFeed}>Despejar Alimento</Text>
       </TouchableOpacity>
     </View>
